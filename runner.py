@@ -1,8 +1,27 @@
 #!/usr/bin/python3
 
-import argparse, yaml, os, time, re, sys, shutil
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.dirname(__file__)), "python_modules")))
-from utils import run_bash
+import argparse, yaml, os, time, re, sys, shutil, subprocess
+
+def run_bash(command_list, **params): 
+    capture_output = params.get("capture_output", False)
+    cwd = params.get("cwd", None)
+    print(*command_list, sep=" ")
+    result = subprocess.run(command_list,
+        capture_output=capture_output, text=True, cwd=cwd)
+    
+    if result.returncode != 0:
+        if result.stdout:
+            print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
+        fail = params.get("fail_if_error", True)
+        if fail: 
+            raise Exception("Bash command failed, rc: %s\nstderr: %s " % (str(result.returncode), result.stderr))
+        else:
+            return None
+    if capture_output:
+        return result
+    return None
 
 
 tmp_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "tmp"))

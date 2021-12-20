@@ -1,0 +1,21 @@
+target: local-docker
+setup:
+  containers:
+    - name: pulsar 
+      image: ${PULSAR_IMAGE}
+      command: "./bin/pulsar standalone"
+    - name: pulsar-client
+      image: ${PULSAR_IMAGE}
+      env:
+        - name: webServiceUrl
+          value: "http://pulsar:8080/"
+        - name: brokerServiceUrl
+          value: "pulsar://pulsar:6650/"
+    
+tests:
+  pulsar-client: ["${script:simple/main.sh}"]
+  
+
+    
+
+

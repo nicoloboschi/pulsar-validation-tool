@@ -1,0 +1,46 @@
+{% extends "templates/constants.yaml" %}
+  {% import "templates/pulsar/constants.yaml" as pulsar with context %}
+
+  {% block benchmark %}
+ensemble:
+  server:
+    node.count: {{cluster.numNodes}}
+    provisioner:
+      name: ctool_kubernetes
+      properties:
+        {{ make_instance_type_props('pulsar') }}
+    configuration_manager:
+      - name: helm
+        properties:
+          namespace: {{helmchart.namespace}}
+          helm.install.type: repo
+          helm.install.name: {{helmchart.namespace}}
+          helm.install.values.file: <<file:pulsar-values.yaml>>
+          helm.install.debug: true
+          helm.install.timeout: 1200s
+          helm.repo.name: {{helmchart.reponame}}
+          helm.repo.url:  {{helmchart.repourl}}
+          helm.chart.name: {{helmchart.chartname}}
+          helm.chart.version: {{helmchart.version}}
+      - name: kubernetes_logs
+        properties:
+          container_logs_namespace: {{helmchart.namespace}}
+          ignore_failures: true
+      - name: remote_files
+        properties:
+          files:
+            ${remote_files}
+    local_files:
+      ${local_files}
+      - path: pulsar-values.yaml
+        data: |
+          ${pulsar_values}
+  client: server
+
+workload:
+  phases:
+    ${phases}
+  checkers:
+    nofail:
+      checker: nofail
+  {% endblock %}

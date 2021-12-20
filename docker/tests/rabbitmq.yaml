@@ -1,0 +1,31 @@
+target: local-docker
+setup:
+  containers:
+    - name: pulsar 
+      image: e5915e8720b8
+      command: "set -e && curl -Lo /pulsar/protocols/rabbit.nar https://github.com/datastax/starlight-for-rabbitmq/releases/download/v1.0.0/starlight-rabbitmq-1.0.0.nar && chmod +x /pulsar/bin/apply-config-from-env.py && /pulsar/bin/apply-config-from-env.py /pulsar/conf/standalone.conf && /pulsar/bin/pulsar standalone"
+      ports: [5672, 8080, 6650]
+      env:
+        - name: PULSAR_PREFIX_configurationStoreServers
+          value: 127.0.0.1:2181
+        - name: PULSAR_PREFIX_amqpListeners
+          value: "amqp://pulsar:5672"
+        - name: PULSAR_PREFIX_messagingProtocols
+          value: rabbitmq
+        - name: PULSAR_PREFIX_protocolHandlerDirectory
+          value: /pulsar/protocols
+    - name: pulsar-client
+      image: e5915e8720b8
+      env:
+        - name: webServiceUrl
+          value: "http://pulsar:8080/"
+        - name: brokerServiceUrl
+          value: "pulsar://pulsar:6650/"
+    
+tests:
+  pulsar-client: ["${script:rabbitmq/main.sh}"]
+  
+
+    
+
+

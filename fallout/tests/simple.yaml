@@ -1,0 +1,13 @@
+template: "fallout/templates/base.yaml"
+pulsar_values: "fallout/values/base.yaml"
+setup:
+  containers:
+    - name: pulsar-job
+      image: ${PULSAR_IMAGE}
+      mounts: ["${script:simple/main.sh}"]
+      command: "/bin/bash ${script:simple/main.sh}"
+      env:
+        - name: webServiceUrl
+          value: "{{proxy.web.protocol}}://pulsar-proxy:{{proxy.web.port}}/"
+        - name: brokerServiceUrl
+          value: "{{proxy.service.protocol}}://pulsar-proxy:{{proxy.service.port}}/"

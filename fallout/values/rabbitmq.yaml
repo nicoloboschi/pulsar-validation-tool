@@ -1,0 +1,103 @@
+enableAntiAffinity: yes
+initialize: true  # ASF Helm Chart
+enableTokenAuth: no
+affinity: # ASF Helm Chart
+  anti_affinity: no
+restartOnConfigMapChange:
+  enabled: yes
+enableTls: no
+image:
+  zookeeper:
+    repository: harbor.sjc.dsinternal.org/pulsar/pulsar-all
+    tag: latest
+  bookie:
+    repository: harbor.sjc.dsinternal.org/pulsar/pulsar-all
+    tag: latest
+  bookkeeper:
+    repository: harbor.sjc.dsinternal.org/pulsar/pulsar-all
+    tag: latest
+  autorecovery:
+    repository: harbor.sjc.dsinternal.org/pulsar/pulsar-all
+    tag: latest
+  broker:
+    repository: harbor.sjc.dsinternal.org/pulsar/pulsar-all
+    tag: latest
+  bastion:
+    repository: harbor.sjc.dsinternal.org/pulsar/pulsar-all
+    tag: latest
+  proxy:
+    repository: harbor.sjc.dsinternal.org/pulsar/pulsar-all
+    tag: latest
+  functions:
+    repository: harbor.sjc.dsinternal.org/pulsar/pulsar-all
+    tag: latest
+extra:
+  function: no
+  burnell: no
+  burnellLogCollector: no
+  pulsarHeartbeat: no
+  pulsarAdminConsole: no
+default_storage:
+  existingStorageClassName: server-storage
+volumes:
+  data: #ASF Helm Chart
+    storageClassName: existent-storage-class
+zookeeper:
+  replicaCount: 3
+bookkeeper:
+  replicaCount: 2
+broker:
+  component: broker
+  probe:
+     period: 60
+  replicaCount: 2
+  ledger:
+    defaultEnsembleSize: 2
+    defaultAckQuorum:  1
+    defaultWriteQuorum: 1
+function:
+  replicaCount: 0
+  functionReplicaCount: 1
+proxy:
+  replicaCount: 2
+  autoPortAssign:
+    enablePlainTextWithTLS: yes
+  service:
+    type: ClusterIP
+    autoPortAssign:
+      enabled: yes
+  configData:
+    PULSAR_PREFIX_proxyExtensionsDirectory: /pulsar/myproxyprotocols
+    PULSAR_PREFIX_proxyExtensions: rabbitmq
+    PULSAR_PREFIX_amqpListeners: amqp://127.0.0.1:5672
+    PULSAR_PREFIX_advertisedAddress: 127.0.0.1
+  initContainer:
+    repository: ubuntu
+    tag: latest
+    pullPolicy: IfNotPresent
+    command: ["/bin/bash", "-c", "apt-get update && apt-get install -y wget && wget -O /pulsar/myproxyprotocols/rabbitmq.nar https://github.com/datastax/starlight-for-rabbitmq/releases/download/v1.0.0/starlight-rabbitmq-1.0.0.nar"]
+    emptyDirPath: "/pulsar/myproxyprotocols"
+grafanaDashboards:
+  enabled: no
+pulsarAdminConsole:
+  replicaCount: 0
+  service:
+    type: ClusterIP
+grafana: #ASF Helm Chart
+  service:
+    type: ClusterIP
+pulsar_manager:
+  service: #ASF Helm Chart
+    type: ClusterIP
+kube-prometheus-stack: # Luna Streaming Helm Chart
+  enabled: yes
+  prometheusOperator:
+    enabled: yes
+  grafana:
+    enabled: yes
+    adminPassword: e9JYtk83*4#PM8
+    service:
+      type: ClusterIP
+pulsarSQL:
+  service:
+    type: ClusterIP

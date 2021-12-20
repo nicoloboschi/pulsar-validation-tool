@@ -1,0 +1,15 @@
+template: "fallout/templates/base.yaml"
+pulsar_values: "fallout/values/rabbitmq.yaml"
+setup:
+  containers:
+    - name: pulsar-client
+      image: ${PULSAR_IMAGE}
+      mounts: ["rabbitmq/main.sh"]
+      command: "/bin/bash ${script:rabbitmq/main.sh}"
+      env:
+        - name: webServiceUrl
+          value: "{{proxy.web.protocol}}://pulsar-proxy:{{proxy.web.port}}/"
+        - name: brokerServiceUrl
+          value: "{{proxy.service.protocol}}://pulsar-proxy:{{proxy.service.port}}/"
+        - name: HOSTNAME_PULSAR
+          value: pulsar-proxy

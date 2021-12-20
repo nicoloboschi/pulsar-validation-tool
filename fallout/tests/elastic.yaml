@@ -1,0 +1,19 @@
+template: "fallout/templates/base.yaml"
+pulsar_values: "fallout/values/base.yaml"
+setup:
+  containers:
+    - name: pulsar-client
+      image: ${PULSAR_IMAGE}
+      mounts: ["elastic/main.sh", "elastic/elastic-avro-ser.jsh", "elastic/elastic-checker.py"]
+      command: "/bin/bash ${script:elastic/main.sh}"
+      env:
+        - name: webServiceUrl
+          value: "{{proxy.web.protocol}}://pulsar-proxy:{{proxy.web.port}}/"
+        - name: brokerServiceUrl
+          value: "{{proxy.service.protocol}}://pulsar-proxy:{{proxy.service.port}}/"
+    - name: elastic
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+      ports: [ 9200 ]
+      env:
+        - name: discovery.type
+          value: single-node

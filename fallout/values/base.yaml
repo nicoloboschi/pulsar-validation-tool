@@ -1,0 +1,91 @@
+enableAntiAffinity: {{cluster.antiaffinity}}
+initialize: true  # ASF Helm Chart
+restartOnConfigMapChange:
+  enabled: yes
+image:
+  zookeeper:
+    repository: {{image_name}}
+    tag: {{image_version}}
+  bookie:
+    repository: {{image_name}}
+    tag: {{image_version}}
+  bookkeeper:
+    repository: {{image_name}}
+    tag: {{image_version}}
+  autorecovery:
+    repository: {{image_name}}
+    tag: {{image_version}}
+  broker:
+    repository: {{image_name}}
+    tag: {{image_version}}
+  proxy:
+    repository: {{image_name}}
+    tag: {{image_version}}
+  functions:
+    repository: {{image_name}}
+    tag: {{image_version}}
+  function:
+    repository: {{image_name}}
+    tag: {{image_version}}
+extra:
+  function: yes
+  burnell: no
+  burnellLogCollector: no
+  pulsarHeartbeat: no
+  pulsarAdminConsole: no
+  autoRecovery: no
+  functionsAsPods: yes
+default_storage:
+  existingStorageClassName: server-storage
+volumes:
+  data: #ASF Helm Chart
+    storageClassName: existent-storage-class
+zookeeper:
+  replicaCount: {{cluster.numZookeepers}}
+bookkeeper:
+  replicaCount: {{cluster.numBookies}}
+broker:
+  component: broker
+  replicaCount: {{cluster.numBrokers}}
+  ledger:
+    defaultEnsembleSize: {{replication.bkEnsembleSize}}
+    defaultAckQuorum:  {{replication.bkAckQuorum}}
+    defaultWriteQuorum: {{replication.bkWriteQuorum}}
+function:
+  replicaCount: 1
+  functionReplicaCount: 1
+  runtime: "kubernetes"
+proxy:
+  replicaCount: {{cluster.numProxies}}
+  autoPortAssign:
+    enablePlainTextWithTLS: yes
+  service:
+    type: ClusterIP
+    autoPortAssign:
+      enabled: yes
+grafanaDashboards:
+  enabled: yes
+pulsarAdminConsole:
+  replicaCount: 0
+  service:
+    type: ClusterIP
+grafana: #ASF Helm Chart
+  service:
+    type: ClusterIP
+pulsar_manager:
+  service: #ASF Helm Chart
+    type: ClusterIP
+kube-prometheus-stack: # Luna Streaming Helm Chart
+  enabled: no
+  prometheusOperator:
+    enabled: no
+  grafana:
+    enabled: no
+    adminPassword: e9JYtk83*4#PM8
+    service:
+      type: ClusterIP
+pulsarSQL:
+  service:
+    type: ClusterIP
+enableTls: no
+enableTokenAuth: no

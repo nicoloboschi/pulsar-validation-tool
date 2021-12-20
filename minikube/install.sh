@@ -1,5 +1,11 @@
 #!/bin/bash
-grep '.pvtool/bin' $HOME/.bashrc ||  echo "PATH=\$PATH:$HOME/.pvtool/bin" >> "$HOME/.bashrc"
+PVT_HOME="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+grep '.pvtool/bin' $HOME/.bashrc ||  echo "export PATH=\$PATH:$HOME/.pvtool/bin" >> "$HOME/.bashrc"
+grep 'PVT_HOME=' $HOME/.bashrc ||  echo "export PVT_HOME=$PVT_HOME"  >> "$HOME/.bashrc"
+grep 'source $PVT_HOME' $HOME/.bashrc ||  echo "source \$PVT_HOME/minikube/utils.sh"  >> "$HOME/.bashrc"
+source $PVTHO
+
 mkdir -p $HOME/.pvtool
 mkdir -p $HOME/.pvtool/bin
 cd $HOME/.pvtool

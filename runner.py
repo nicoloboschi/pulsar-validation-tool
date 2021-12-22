@@ -88,6 +88,7 @@ def compose_docker_run_command(name, image, **params):
         "run",
         "--rm",
         "-d",
+        "-i",
         "--name",
         name,
         "--network",

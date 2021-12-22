@@ -162,7 +162,7 @@ def execute_tests_in_container(container_name, tests):
 
     cmd_entrypoint = " && ".join(to_run)
     
-    cmd_exec = ["docker", "exec", "-it", container_name, "/bin/bash", "-ec", cmd_entrypoint]
+    cmd_exec = ["docker", "exec", "-i", container_name, "/bin/bash", "-ec", cmd_entrypoint]
     print_phase("Executing tests for container %s" % container_name)
     run_bash(cmd_exec)
 

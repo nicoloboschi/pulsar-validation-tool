@@ -22,7 +22,6 @@ pvt_render() {
 }
 
 pvt_render_install() {
-    set -ex
     local filename=${PVT_HOME}/tmp/$(basename $1)-$(uuidgen).yaml
     pvt_render $1 "$filename"
     pvt_install "$filename"

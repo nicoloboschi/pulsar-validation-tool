@@ -18,7 +18,7 @@ pvt_render() {
     mkdir -p $PVT_HOME/tmp
     default_filename=$PVT_HOME/tmp/$1-$(uuidgen).yaml
     local filename=${2:-$default_filename}
-    envsubst < $1 > "$filename"
+    envsubst < "$1" > "$filename"
 }
 
 pvt_render_install() {

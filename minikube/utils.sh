@@ -15,12 +15,13 @@ pvt_install() {
 }
 
 pvt_render() {
-    name=$(2:-$PVT_HOME/tmp/$1-$(uuidgen).yaml)
-    envsubst < $1 > $name
+    mkdir -p $PVT_HOME/tmp
+    local filename=$(2:-$PVT_HOME/tmp/$1-$(uuidgen).yaml)
+    envsubst < $1 > ${filename}
 }
 
 pvt_render_install() {
-    name=$PVT_HOME/tmp/$1-$(uuidgen).yaml
-    pvt_render $1 $name
-    pvt_install $name
+    local filename=${PVT_HOME}/tmp/$1-$(uuidgen).yaml
+    pvt_render $1 $filename
+    pvt_install $filename
 }

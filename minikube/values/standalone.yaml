@@ -1,0 +1,86 @@
+enableAntiAffinity: no
+initialize: true  # ASF Helm Chart
+restartOnConfigMapChange:
+  enabled: yes
+image:
+  zookeeper:
+    repository: $image_name
+    tag: $image_tag
+  bookie:
+    repository: $image_name
+    tag: $image_tag
+  bookkeeper:
+    repository: $image_name
+    tag: $image_tag
+  autorecovery:
+    repository: $image_name
+    tag: $image_tag
+  broker:
+    repository: $image_name
+    tag: $image_tag
+  proxy:
+    repository: $image_name
+    tag: $image_tag
+  functions:
+    repository: $image_name
+    tag: $image_tag
+  function:
+    repository: $image_name
+    tag: $image_tag
+extra:
+  function: yes
+  burnell: no
+  burnellLogCollector: no
+  pulsarHeartbeat: no
+  pulsarAdminConsole: no
+  autoRecovery: no
+  functionsAsPods: yes
+zookeeper:
+  replicaCount: 1
+bookkeeper:
+  replicaCount: 1
+broker:
+  component: broker
+  replicaCount: 1
+  ledger:
+    defaultEnsembleSize: 1
+    defaultAckQuorum:  1
+    defaultWriteQuorum: 1
+function:
+  replicaCount: 1
+  functionReplicaCount: 1
+  runtime: "kubernetes"
+proxy:
+  replicaCount: 1
+  autoPortAssign:
+    enablePlainTextWithTLS: yes
+  service:
+    type: ClusterIP
+    autoPortAssign:
+      enabled: yes
+grafanaDashboards:
+  enabled: yes
+pulsarAdminConsole:
+  replicaCount: 0
+  service:
+    type: ClusterIP
+grafana: #ASF Helm Chart
+  service:
+    type: ClusterIP
+pulsar_manager:
+  service: #ASF Helm Chart
+    type: ClusterIP
+kube-prometheus-stack: # Luna Streaming Helm Chart
+  enabled: no
+  prometheusOperator:
+    enabled: no
+  grafana:
+    enabled: no
+    adminPassword: e9JYtk83*4#PM8
+    service:
+      type: ClusterIP
+pulsarSQL:
+  service:
+    type: ClusterIP
+enableTls: no
+enableTokenAuth: no

@@ -1,12 +1,12 @@
 
 pvt_minikube_start() {
-    minikube delete
+    minikube delete || true
     minikube start --kubernetes-version='1.19.0'
 }
 
 pvt_clean() {    
-    kubectl delete --all all
-    helm delete pvtpulsar
+    kubectl delete --all all || true
+    helm delete pvtpulsar || true
 }
 
 pvt_install() {

@@ -5,6 +5,7 @@ grep '.pvtool/bin' $HOME/.bashrc ||  echo "export PATH=\$PATH:$HOME/.pvtool/bin"
 grep 'PVT_HOME=' $HOME/.bashrc ||  echo "export PVT_HOME=$PVT_HOME"  >> "$HOME/.bashrc"
 grep 'source $PVT_HOME' $HOME/.bashrc ||  echo "source \$PVT_HOME/minikube/utils.sh"  >> "$HOME/.bashrc"
 
+source $PVT_HOME/minikube/utils.sh
 
 mkdir -p $HOME/.pvtool
 mkdir -p $HOME/.pvtool/bin

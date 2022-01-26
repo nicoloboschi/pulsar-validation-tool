@@ -1,0 +1,5 @@
+FROM apachepulsar/pulsar-test-latest-version:latest as base
+
+COPY *.jar /pulsar/lib
+
+

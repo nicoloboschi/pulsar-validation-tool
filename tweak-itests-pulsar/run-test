@@ -1,0 +1,8 @@
+#!/bin/bash
+set -e
+cd ${PULSAR_DIR}/tests/integration
+TEST=${TEST:-"TestFileSystemOffload"}
+PULSAR_TEST_IMAGE_NAME="apachepulsar/pulsar-test-latest-version:latest-tweak" mvnd test -Dtest=${TEST} -PintegrationTests -DredirectTestOutputToFile=false
+
+
+

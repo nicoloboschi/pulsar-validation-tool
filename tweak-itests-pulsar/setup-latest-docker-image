@@ -1,0 +1,10 @@
+#!/bin/bash
+set -e
+DOCKERFILE_PATH=${PULSAR_DIR}/tests/integration/docker-images/latest-version-image/Dockerfile
+rm -rf $DOCKERFILE
+cp test-Dockerfile $DOCKERFILE
+cd ${PULSAR_DIR}/tests/docker-images/latest-version-image
+
+mvnd clean install -DskipTests -Pdocker 
+
+

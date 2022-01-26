@@ -1,0 +1,27 @@
+set -e
+
+HERE=$(pwd)
+cd $PULSAR_DIR
+# Edit here for adding other submodules
+WORKING_MODULES="pulsar-broker,pulsar-functions/worker,pulsar-functions/instance,pulsar-metadata"
+
+mvnd clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -pl $WORKING_MODULES
+rm -rf tests/docker-images/latest-version-image/libs
+mkdir tests/docker-images/latest-version-image/libs
+
+# Edit here for adding other submodules
+cp pulsar-broker/target/*jar tests/docker-images/latest-version-image/libs/
+cp pulsar-functions/worker/target/*jar tests/docker-images/latest-version-image/libs/
+cp pulsar-functions/instance/target/*jar tests/docker-images/latest-version-image/libs/
+cp pulsar-metadata/target/*jar tests/docker-images/latest-version-image/libs/
+
+# Build dockerfile
+cd tests/docker-images/latest-version-image
+docker build -t apachepulsar/pulsar-test-latest-version:latest-tweak -f ${HERE}/trick-Dockerfile libs
+
+echo "********************************************"
+echo "Docker image created: apachepulsar/pulsar-test-latest-version:latest-tweak"
+echo "********************************************"
+
+
+

@@ -1,0 +1,9 @@
+FROM apachepulsar/pulsar-test-latest-version:latest as base
+
+RUN rm -rf /pulsar/lib/org.apache.pulsar-pulsar-broker-2.10.0-SNAPSHOT.jar
+RUN rm -rf /pulsar/lib/org.apache.pulsar-pulsar-functions-worker-2.10.0-SNAPSHOT.jar
+RUN rm -rf /pulsar/lib/org.apache.pulsar-pulsar-functions-instance-2.10.0-SNAPSHOT.jar
+RUN rm -rf /pulsar/lib/org.apache.pulsar-pulsar-metadata-2.10.0-SNAPSHOT.jar
+COPY *.jar /pulsar/lib
+
+

@@ -33,6 +33,6 @@ export BUILD_MODULES="pulsar-client"
 # Run the test. it must be in the tests/integration directory. Use TEST env variable to set the Java file name.
 
 export TEST=PulsarFunctionsJavaProcessTest
-TEST= ./run-test
+./run-test
 ```
 

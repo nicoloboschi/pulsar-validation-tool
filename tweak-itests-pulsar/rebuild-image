@@ -3,21 +3,26 @@ set -e
 HERE=$(pwd)
 cd $PULSAR_DIR
 # Edit here for adding other submodules
-WORKING_MODULES="pulsar-broker,pulsar-functions/worker,pulsar-functions/instance,pulsar-metadata"
+BUILD_MODULES=${BUILD_MODULES:-"pulsar-common,pulsar-broker-common,pulsar-broker,pulsar-metadata"}
 
-mvnd clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -pl $WORKING_MODULES
+PULSAR_VERSION=$(mvnd help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml )
+mvnd clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -pl $BUILD_MODULES
 rm -rf tests/docker-images/latest-version-image/libs
 mkdir tests/docker-images/latest-version-image/libs
 
-# Edit here for adding other submodules
-cp pulsar-broker/target/*jar tests/docker-images/latest-version-image/libs/
-cp pulsar-functions/worker/target/*jar tests/docker-images/latest-version-image/libs/
-cp pulsar-functions/instance/target/*jar tests/docker-images/latest-version-image/libs/
-cp pulsar-metadata/target/*jar tests/docker-images/latest-version-image/libs/
+MODULES_ARR=(${BUILD_MODULES//,/ })
+echo $MODULES_ARR
+
+
+for module in "${MODULES_ARR[@]}"
+do
+   echo "Copying module $module"
+   cp ${module}/target/${module}.jar tests/docker-images/latest-version-image/libs/org.apache.pulsar-${module}-${PULSAR_VERSION}.jar
+done
 
 # Build dockerfile
 cd tests/docker-images/latest-version-image
-docker build -t apachepulsar/pulsar-test-latest-version:latest-tweak -f ${HERE}/trick-Dockerfile libs
+docker build -t apachepulsar/pulsar-test-latest-version:latest-tweak -f ${HERE}/fast-rebuild-Dockerfile libs
 
 echo "********************************************"
 echo "Docker image created: apachepulsar/pulsar-test-latest-version:latest-tweak"

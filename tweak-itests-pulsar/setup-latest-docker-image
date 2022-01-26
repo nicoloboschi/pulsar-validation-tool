@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
-DOCKERFILE_PATH=${PULSAR_DIR}/tests/integration/docker-images/latest-version-image/Dockerfile
-rm -rf $DOCKERFILE
-cp test-Dockerfile $DOCKERFILE
-cd ${PULSAR_DIR}/tests/docker-images/latest-version-image
+LATEST_VERSION_IMAGE_ROOT=${PULSAR_DIR}/tests/docker-images/latest-version-image
+DOCKERFILE_PATH=${LATEST_VERSION_IMAGE_ROOT}/Dockerfile
+rm -rf $DOCKERFILE_PATH
+cp latest-docker-image-Dockerfile $DOCKERFILE_PATH
 
-mvnd clean install -DskipTests -Pdocker 
+cd ${PULSAR_DIR}/tests/docker-images
 
-
+mvnd clean install -DskipTests -Pdocker -pl java-test-functions,latest-version-image

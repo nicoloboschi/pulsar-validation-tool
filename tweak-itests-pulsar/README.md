@@ -24,10 +24,15 @@ export PULSAR_DIR=${HOME}/mypulsardir
 
 ```
 # "apachepulsar/pulsar-test-latest-version:latest-tweak" image will be created/updated
-# The default modules that will be updated are: pulsar-broker,pulsar-functions/worker,pulsar-functions/instance,pulsar-metadata
-# If you want add other modules, you have to edit the "rebuild-image" and "trick-Dockerfile" files.
+# The default modules that will be build and deployed are: pulsar-common,pulsar-broker-common,pulsar-broker,pulsar-metadata
+# If you want add other modules, you have to set the BUILD_MODULES env variable.
+
+export BUILD_MODULES="pulsar-client"
 ./rebuild-image
 
-TEST=PulsarFunctionsJavaProcessTest ./run-test
+# Run the test. it must be in the tests/integration directory. Use TEST env variable to set the Java file name.
+
+export TEST=PulsarFunctionsJavaProcessTest
+TEST= ./run-test
 ```
 

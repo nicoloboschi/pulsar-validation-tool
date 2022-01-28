@@ -3,7 +3,7 @@ set -e
 HERE=$(pwd)
 cd $PULSAR_DIR
 # Edit here for adding other submodules
-BUILD_MODULES=${BUILD_MODULES:-"pulsar-common,pulsar-broker-common,pulsar-broker,pulsar-metadata"}
+BUILD_MODULES=${BUILD_MODULES:-"pulsar-common,pulsar-broker-common,pulsar-broker,pulsar-metadata,pulsar-functions/worker,pulsar-functions/instance"}
 
 PULSAR_VERSION=$(mvnd help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml )
 mvnd clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -pl $BUILD_MODULES
@@ -14,11 +14,15 @@ MODULES_ARR=(${BUILD_MODULES//,/ })
 echo $MODULES_ARR
 
 
+set -x
 for module in "${MODULES_ARR[@]}"
 do
    echo "Copying module $module"
-   cp ${module}/target/${module}.jar tests/docker-images/latest-version-image/libs/org.apache.pulsar-${module}-${PULSAR_VERSION}.jar
+   jar_part=${module/\//-}
+   cp ${module}/target/${jar_part}.jar tests/docker-images/latest-version-image/libs/org.apache.pulsar-${jar_part}-${PULSAR_VERSION}.jar
 done
+set +x
+
 
 # Build dockerfile
 cd tests/docker-images/latest-version-image

@@ -10,8 +10,6 @@ Warnings:
 ### One time setup
 
 ```
-# mvn clean install -DskipTests 
-# mvn clean install -DskipTests -am -pl docker,docker-all -Pdocker
 export PULSAR_DIR=${HOME}/mypulsardir
 
 # Warning: this will replace the Dockerfile file

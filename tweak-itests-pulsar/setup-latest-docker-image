@@ -1,5 +1,19 @@
 #!/bin/bash
 set -e
+if [[ -z "$PULSAR_DIR" ]]; then
+    echo "PULSAR_DIR not set"
+    exit 1
+fi
+SKIP_PULSAR_BUILD=${SKIP_PULSAR_BUILD:-"false"}
+
+HERE=$(pwd)
+
+if [[ "$SKIP_PULSAR_BUILD" == "false" ]]; then
+    cd ${PULSAR_DIR}
+    mvnd clean install -DskipTests -am -pl docker/pulsar,docker/pulsar-all -Pdocker
+    cd ${HERE}
+fi
+
 LATEST_VERSION_IMAGE_ROOT=${PULSAR_DIR}/tests/docker-images/latest-version-image
 DOCKERFILE_PATH=${LATEST_VERSION_IMAGE_ROOT}/Dockerfile
 rm -rf $DOCKERFILE_PATH

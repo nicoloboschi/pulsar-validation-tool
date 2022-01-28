@@ -1,11 +1,18 @@
 set -e
 
+if [[ -z "$PULSAR_DIR" ]]; then
+    echo "PULSAR_DIR not set"
+    exit 1
+fi
+
 HERE=$(pwd)
 cd $PULSAR_DIR
 # Edit here for adding other submodules
 BUILD_MODULES=${BUILD_MODULES:-"pulsar-common,pulsar-broker-common,pulsar-broker,pulsar-metadata,pulsar-functions/worker,pulsar-functions/instance"}
 
-PULSAR_VERSION=$(mvnd help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml )
+PULSAR_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
+echo "Found Pulsar Version: $PULSAR_VERSION"
+
 mvnd clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -pl $BUILD_MODULES
 rm -rf tests/docker-images/latest-version-image/libs
 mkdir tests/docker-images/latest-version-image/libs

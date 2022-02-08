@@ -10,7 +10,7 @@ HERE=$(pwd)
 
 if [[ "$SKIP_PULSAR_BUILD" == "false" ]]; then
     cd ${PULSAR_DIR}
-    mvnd clean install -DskipTests -am -pl docker/pulsar,docker/pulsar-all -Pdocker
+    mvnd clean install -Dspotbugs.skip -Dcheckstyle.skip -Dlicense.skip -Djavadoc.skip -DskipTests -am -pl docker/pulsar,docker/pulsar-all -Pdocker
     cd ${HERE}
 fi
 
@@ -21,4 +21,4 @@ cp latest-docker-image-Dockerfile $DOCKERFILE_PATH
 
 cd ${PULSAR_DIR}/tests/docker-images
 
-mvnd clean install -DskipTests -Pdocker -pl java-test-functions,latest-version-image
+mvnd clean install -Dspotbugs.skip -Dcheckstyle.skip -Dlicense.skip -Djavadoc.skip  -DskipTests -Pdocker -pl java-test-functions,latest-version-image

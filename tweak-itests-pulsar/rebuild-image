@@ -1,5 +1,6 @@
 set -e
 
+MVN_COMMAND=${MVN_COMMAND:-"mvn"}
 if [[ -z "$PULSAR_DIR" ]]; then
     echo "PULSAR_DIR not set"
     exit 1
@@ -13,7 +14,7 @@ BUILD_MODULES=${BUILD_MODULES:-"pulsar-common,pulsar-broker-common,pulsar-broker
 PULSAR_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
 echo "Found Pulsar Version: $PULSAR_VERSION"
 
-mvnd clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -pl $BUILD_MODULES
+${MVN_COMMAND} clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -Dlicense.skip -Djavadoc.skip -pl $BUILD_MODULES
 rm -rf tests/docker-images/latest-version-image/libs
 mkdir tests/docker-images/latest-version-image/libs
 

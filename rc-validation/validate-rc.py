@@ -7,6 +7,7 @@ import tarfile
 def run_bash(command_list, **params): 
     capture_output = params.get("capture_output", False)
     cwd = params.get("cwd", None)
+    print("Running following commands from %s:" % cwd)
     print(*command_list, sep=" ")
     result = subprocess.run(command_list,
         capture_output=capture_output, text=True, cwd=cwd)
@@ -96,13 +97,8 @@ def build_mvn(dir, project, version):
         # the build works only from the root dir
         run_bash(["mvn", "clean", "install", "-DskipTests"], cwd=dir)
 
-def build_docker_image(dir):
-    # the build works only from the root dir
-
-    # mvn -B -f docker/pulsar/pom.xml install -am -Pdocker,-main -DskipTests -Ddocker.nocache=true
-    run_bash(["mvn", "install", "-DskipTests", "-Pdocker,-main", "-DintegrationTests", "-am", "-f", "docker/pulsar/pom.xml", "-Ddocker.nocache=true"], cwd=dir)
-    run_bash(["mvn", "install", "-DskipTests", "-Pdocker,-main", "-DintegrationTests", "-am", "-f", "docker/pulsar-all/pom.xml", "-Ddocker.nocache=true"], cwd=dir)
-
+def build_docker_image(dir):  
+    run_bash(["./build.sh"], cwd=os.path.join(dir, "docker"))
 
 
 parser = argparse.ArgumentParser()

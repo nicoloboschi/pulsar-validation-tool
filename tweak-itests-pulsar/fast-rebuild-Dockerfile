@@ -1,5 +1,7 @@
 FROM apachepulsar/pulsar-test-latest-version:latest as base
 
-COPY *.jar /pulsar/lib
+COPY libs/*.jar /pulsar/lib
+RUN rm -rf /pulsar/offloaders
+COPY offloaders/*.jar /pulsar/offloaders
 
 

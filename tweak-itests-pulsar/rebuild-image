@@ -10,13 +10,19 @@ HERE=$(pwd)
 cd $PULSAR_DIR
 # Edit here for adding other submodules
 BUILD_MODULES=${BUILD_MODULES:-"pulsar-common,pulsar-broker-common,pulsar-broker,pulsar-metadata,pulsar-functions/worker,pulsar-functions/instance"}
+BUILD_OFFLOADERS=${BUILD_OFFLOADERS:-false}
 
 PULSAR_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
 echo "Found Pulsar Version: $PULSAR_VERSION"
 
 ${MVN_COMMAND} clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -Dlicense.skip -Djavadoc.skip -pl $BUILD_MODULES
-rm -rf tests/docker-images/latest-version-image/libs
-mkdir tests/docker-images/latest-version-image/libs
+
+TWEAK_ROOT_DIR=tests/docker-images/latest-version-image/tweak-root-dir
+rm -rf $TWEAK_ROOT_DIR
+
+mkdir $TWEAK_ROOT_DIR
+mkdir $TWEAK_ROOT_DIR/libs
+mkdir $TWEAK_ROOT_DIR/offloaders
 
 MODULES_ARR=(${BUILD_MODULES//,/ })
 echo $MODULES_ARR
@@ -27,14 +33,22 @@ for module in "${MODULES_ARR[@]}"
 do
    echo "Copying module $module"
    jar_part=${module/\//-}
-   cp ${module}/target/${jar_part}.jar tests/docker-images/latest-version-image/libs/org.apache.pulsar-${jar_part}-${PULSAR_VERSION}.jar
+   cp ${module}/target/${jar_part}.jar $TWEAK_ROOT_DIR/libs/org.apache.pulsar-${jar_part}-${PULSAR_VERSION}.jar
 done
 set +x
+
+if [[ "$BUILD_OFFLOADERS" == "true" ]]; then
+    ${MVN_COMMAND} clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -Dlicense.skip -Djavadoc.skip -pl jclouds-shaded,tiered-storage/jcloud,tiered-storage/file-system
+    # Copied from distribution/offloaders assembler
+    cp tiered-storage/jcloud/target/tiered-storage-jcloud-${PULSAR_VERSION}.nar $TWEAK_ROOT_DIR/offloaders/tiered-storage-jcloud-${PULSAR_VERSION}.nar
+    cp tiered-storage/file-system/target/tiered-storage-file-system-${PULSAR_VERSION}.nar $TWEAK_ROOT_DIR/offloaders/tiered-storage-file-system-${PULSAR_VERSION}.nar
+fi
 
 
 # Build dockerfile
 cd tests/docker-images/latest-version-image
-docker build -t apachepulsar/pulsar-test-latest-version:latest-tweak -f ${HERE}/fast-rebuild-Dockerfile libs
+
+docker build -t apachepulsar/pulsar-test-latest-version:latest-tweak -f ${HERE}/fast-rebuild-Dockerfile tweak-root-dir
 
 echo "********************************************"
 echo "Docker image created: apachepulsar/pulsar-test-latest-version:latest-tweak"

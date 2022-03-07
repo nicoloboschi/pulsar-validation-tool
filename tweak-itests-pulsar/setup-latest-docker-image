@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -ex
 MVN_COMMAND=${MVN_COMMAND:-"mvn"}
 if [[ -z "$PULSAR_DIR" ]]; then
     echo "PULSAR_DIR not set"
@@ -11,7 +11,7 @@ HERE=$(pwd)
 
 if [[ "$SKIP_PULSAR_BUILD" == "false" ]]; then
     cd ${PULSAR_DIR}
-    ${MVN_COMMAND} clean install -Dspotbugs.skip -Dcheckstyle.skip -Dlicense.skip -Djavadoc.skip -DskipTests -am -pl docker/pulsar,docker/pulsar-all -Pdocker
+    ${MVN_COMMAND} clean install -Dspotbugs.skip -Dcheckstyle.skip -Dlicense.skip -Djavadoc.skip -DskipTests -am -pl docker/pulsar,docker/pulsar-all -Pdocker,main
     cd ${HERE}
 fi
 
@@ -21,4 +21,4 @@ rm -rf $DOCKERFILE_PATH
 cp latest-docker-image-Dockerfile $DOCKERFILE_PATH
 
 cd ${PULSAR_DIR}/tests/docker-images
-${MVN_COMMAND} clean install -Dspotbugs.skip -Dcheckstyle.skip -Dlicense.skip -Djavadoc.skip  -DskipTests -Pdocker,-main -pl java-test-functions,latest-version-image
+${MVN_COMMAND} clean install -Dspotbugs.skip -Dcheckstyle.skip -Dlicense.skip -Djavadoc.skip  -DskipTests -Pdocker,main -pl java-test-functions,latest-version-image

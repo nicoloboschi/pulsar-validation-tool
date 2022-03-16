@@ -1,0 +1,6 @@
+FROM apachepulsar/pulsar-test-latest-version:latest as base
+
+RUN mkdir -p /pulsar/connectors
+RUN rm -rf  /pulsar/connectors/*-elastic-*.nar
+RUN mkdir -p  /pulsar/connectors
+COPY connectors/*.nar /pulsar/connectors/

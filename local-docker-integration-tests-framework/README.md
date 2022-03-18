@@ -8,8 +8,8 @@ There are two main features:
 
 ## Local tests
 Usage:
-`./runner.py -f docker/tests/simple.yaml`
+`./runner.py -f tests/simple.yaml`
 
 File tree:
-* `docker/tests/`: each YAML file is a test. You define the resources and some commands that must be run on the containers.
+* `tests/`: each YAML file is a test. You define the resources and some commands that must be run on the containers.
 * `scripts`: it contains some utility script you may want to import into the test file.

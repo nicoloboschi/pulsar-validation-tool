@@ -1,9 +1,9 @@
 import org.apache.pulsar.client.api.Schema;
 class MyRecord {
-    public int count;
+    public int myfield;
 }
 MyRecord r = new MyRecord();
-r.count = 789;
+r.myfield = 789;
 
 Schema<MyRecord> schema = Schema.AVRO(MyRecord.class);
 byte[] ser = schema.encode(r);

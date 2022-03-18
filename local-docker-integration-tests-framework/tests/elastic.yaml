@@ -14,14 +14,14 @@ setup:
         - name: PULSAR_LOG_LEVEL
           value: "info"
     - name: elastic
-      image: docker.elastic.co/elasticsearch/elasticsearch:7.5.1
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.16.3-amd64
       ports: [ 9200 ]
       env:
         - name: discovery.type
           value: single-node
     - name: pulsar-client
       image: ${PULSAR_IMAGE}
-      mounts: ["${script:elastic/elastic-checker.py}", "${script:elastic/elastic-avro-ser.jsh}"]
+      mounts: ["${script:elastic/elastic-avro-ser.jsh}"]
       env:
         - name: webServiceUrl
           value: "http://pulsar:8080/"

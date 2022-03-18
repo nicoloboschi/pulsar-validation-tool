@@ -18,7 +18,7 @@ jobs:
           #!/bin/bash
           set -ex
           echo "Token: $GITHUB_TOKEN"
-          git clone https://${GITHUB_TOKEN}@github.com/nicoloboschi/pulsar-validation-tool.git .
+          git clone https://github-robot:${GITHUB_TOKEN}@github.com/nicoloboschi/pulsar-validation-tool.git .
           git config user.name "Updater"
           git config user.email "dev@localhost"
           git checkout test-gh-action

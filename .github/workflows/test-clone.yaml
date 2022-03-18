@@ -15,7 +15,7 @@ jobs:
         run: |
           #!/bin/bash
           set -e
-          git clone https://$GH_TOKEN@github.com/nicoloboschi/pulsar-validation-tool.git
+          git clone https://$GH_TOKEN@github.com/nicoloboschi/pulsar-validation-tool.git .
           git checkout test-gh-action
           echo "$(date)" > from-ci
           git config user.name "PVT CI"

@@ -5,6 +5,8 @@ on:
     branches:
       - test-gh-action
 
+env:
+  GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 jobs:
   clone:
     name: Clone

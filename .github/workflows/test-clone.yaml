@@ -1,0 +1,25 @@
+name: Test clone repo
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - test-gh-action
+
+jobs:
+  clone:
+    name: Clone
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout
+        run: |
+          #!/bin/bash
+          set -e
+          git clone https://$GH_TOKEN@github.com/nicoloboschi/pulsar-validation-tool.git
+          git checkout test-gh-action
+          echo "$(date)" > from-ci
+          git config user.name "PVT CI"
+          git config user.email "pvtci@localhost"
+          git add -A
+          git commit -am "From CI"
+          git push origin test-gh-action

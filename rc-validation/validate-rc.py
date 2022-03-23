@@ -98,6 +98,7 @@ def build_mvn(dir, project, version):
         run_bash(["mvn", "clean", "install", "-DskipTests"], cwd=dir)
 
 def build_docker_image(dir):  
+    run_bash(["chmod", "+x", "./build.sh"], cwd=os.path.join(dir, "docker"))
     run_bash(["./build.sh"], cwd=os.path.join(dir, "docker"))
 
 

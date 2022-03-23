@@ -1,0 +1,43 @@
+set -e
+
+MVN_COMMAND=${MVN_COMMAND:-"mvn"}
+if [[ -z "$PULSAR_DIR" ]]; then
+    echo "PULSAR_DIR not set"
+    exit 1
+fi
+
+usage="Usage: <connector_dir> <connector_nar_pattern>"
+
+
+connector_dir=$1
+connector_nar_pattern=$2
+if [[ -z "$connector_dir" || -z "$connector_nar_pattern" ]]; then
+    echo "$usage"
+    exit 1
+fi
+
+HERE=$(pwd)
+cd $PULSAR_DIR
+# Edit here for adding other submodules
+${MVN_COMMAND} clean install -DskipTests -pl pulsar-io/$connector_dir
+
+TWEAK_ROOT_DIR=tests/docker-images/latest-version-image/tweak-root-dir
+rm -rf $TWEAK_ROOT_DIR
+
+mkdir $TWEAK_ROOT_DIR
+mkdir $TWEAK_ROOT_DIR/connectors
+
+
+cp pulsar-io/$connector_dir/target/*.nar $TWEAK_ROOT_DIR/connectors/
+
+# Build dockerfile
+cd tests/docker-images/latest-version-image
+
+docker build -t apachepulsar/pulsar-test-latest-version:latest-tweak -f ${HERE}/fast-rebuild-connector-Dockerfile --build-arg connector="$connector_nar_pattern" tweak-root-dir
+
+echo "********************************************"
+echo "Docker image created: apachepulsar/pulsar-test-latest-version:latest-tweak"
+echo "********************************************"
+
+
+

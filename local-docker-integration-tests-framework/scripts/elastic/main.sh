@@ -5,7 +5,7 @@ set -ex
 apt-get update
 apt-get install -y jq
 #sleep 20
-chmod +x /pulsar/bin/apply-config-from-env.py
+chmod +x /pulsar/bin/apply-config-from-env.py || echo "skip chmod +x"
 /pulsar/bin/apply-config-from-env.py /pulsar/conf/client.conf
 
 until $(curl -s --output /dev/null --fail http://$HOSTNAME_ELASTIC:9200); do

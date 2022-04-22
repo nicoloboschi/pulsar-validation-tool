@@ -19,6 +19,16 @@ setup:
       env:
         - name: discovery.type
           value: single-node
+        - name: xpack.security.http.ssl.enabled
+          value: "false"
+        - name: xpack.security.enabled
+          value: "true"
+        - name: xpack.security.authc.token.enabled
+          value: "true"
+        - name: xpack.license.self_generated.type
+          value: trial
+        - name: ELASTIC_PASSWORD
+          value: elastic
     - name: pulsar-client
       image: ${PULSAR_IMAGE}
       mounts: ["${script:elastic/elastic-avro-ser.jsh}"]
@@ -27,9 +37,12 @@ setup:
           value: "http://pulsar:8080/"
         - name: brokerServiceUrl
           value: "pulsar://pulsar:6650/"
+    - name: es-checker
+      image: ubuntu:latest
         
 tests:
-  pulsar-client: ["${script:elastic/main.sh}"]
+  pulsar-client: ["${script:elastic/client.sh}"]
+  es-checker: ["${script:elastic/check.sh}"]
   
 
     

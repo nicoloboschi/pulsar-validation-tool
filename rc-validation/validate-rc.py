@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
-import subprocess, os, time, argparse, shutil, json, sys
+import subprocess, os, time, argparse, shutil, json
+
 import urllib.request
 import tarfile
 

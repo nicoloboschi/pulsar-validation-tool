@@ -10,6 +10,6 @@ build() {
     docker build -t $repo/$image-jdk11.0.15 --build-arg BASE_IMAGE=datastax/$image .
 }
 
-ls280version=2.8.0_1.1.40
+ls280version=2.8.0_1.1.37
 build lunastreaming:$ls280version
 build lunastreaming-all:$ls280version

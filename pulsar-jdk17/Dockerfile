@@ -1,3 +1,6 @@
+# Usage:
+# docker build -t nicoloboschi/lunastreaming-all:2.8.3_1.0.9-jdk17 --build-arg BASE_IMAGE=datastax/lunastreaming-all:2.8.3_1.0.9 .
+
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 

@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=
+ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
 ENV JAVA_HOME /usr/lib/jvm/java-11-openjdk-amd64

@@ -1,6 +1,18 @@
 #!/bin/bash
 set -e
 
-docker exec -it kinesis awslocal kinesis list-shards --stream-name pulsar-stream
-docker exec -it kinesis awslocal kinesis get-shard-iterator --stream-name pulsar-stream --shard-id  shardId-000000000000 --shard-iterator-type TRIM_HORIZON
-docker exec -it kinesis awslocal kinesis get-records --shard-iterator AAAAAAAAAAGkQ24+110yglJ8eH21CIZxRwT+z3WyoORy9f+z2EigNyKnzMCDKrlNq8SSHmUM99DQ59Ro/J/2qfkmfZ2iLVMcHwGOwjfWxq6SF2o3F224dS/w+NpP/BIYmR5VfYyxTHFIxKG66cBlVT6ERj6Yk8eIqRadMGu99xInZWkl7dT6JD4nZdydv253vBeK+kJRRMrF2zd52Z1RDgNpS6vBatOl
+shardid=$(docker exec -it kinesis awslocal kinesis list-shards --stream-name pulsar-stream | grep 'ShardId' | sed -r 's/^[^:]*:(.*)$/\1/'  | tr -d ',|\"| |\r|\n')
+iterator=$(docker exec -it kinesis awslocal kinesis get-shard-iterator --stream-name pulsar-stream --shard-id $shardid --shard-iterator-type TRIM_HORIZON | grep 'ShardIterator' | sed -r 's/^[^:]*:(.*)$/\1/'  | tr -d ',|\"| |\r|\n')
+result=$(docker exec -it kinesis awslocal kinesis get-records --shard-iterator $iterator)
+count=$(echo "$result" | grep "Data" | wc -l | tr -d ' ')
+echo "count is $count"
+
+echo "$result" | grep "Data" | sed -r 's/^[^:]*:(.*)$/\1/'  | tr -d ',|\"| ' | while read data; do 
+    decoded=$(echo "$data" | base64 --decode)
+    if [[ "$decoded" != *"\"payload\":{\"id\":"* ]]; then 
+        echo "found invalid record: $decoded"
+        exit 1
+    fi
+done
+
+    

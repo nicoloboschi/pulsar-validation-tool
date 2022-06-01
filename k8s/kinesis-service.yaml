@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Service
+metadata: {name: kinesis-service}
+spec:
+  selector: {app: kinesis-cluster}
+  ports:
+  - {name: http, port: 4566, targetPort: 4566}
+  type: LoadBalancer

@@ -13,3 +13,7 @@ docker exec -it pulsar bin/pulsar-admin sinks create --namespace default --tenan
     --parallelism 1
 
 echo "Sink uploaded"
+
+docker exec -it pulsar bin/pulsar-admin sinks update --namespace default --tenant public \
+    --name kinesis-sink \
+    --sink-config '{"awsKinesisStreamName": "pulsar-stream", "awsRegion": "us-east-1", "awsCredentialPluginParam": "{\"accessKey\":\"accesskey\",\"secretKey\":\"secretkey\"}", "messageFormat": "FULL_MESSAGE_IN_JSON_EXPAND_VALUE", "awsEndpoint": "kinesis-service", "awsEndpointPort": 4566, "skipCertificateValidation": true }' \

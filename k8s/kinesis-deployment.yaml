@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: deploykinesis}
+spec:
+  selector:
+    matchLabels: {app: kinesis-cluster}
+  replicas: 1
+  template:
+    metadata:
+      labels: {app: kinesis-cluster}
+    spec:
+      containers:
+      - name: runkinesis
+        image: localstack/localstack:latest
+        env:
+        - name: SERVICES
+          value: kinesis
+        - name: HOSTNAME_EXTERNAL
+          value: "kinesis-service"
+        - name: LOCALSTACK_HOSTNAME
+          value: "kinesis-service"
+        ports:
+        - {containerPort: 4566}

@@ -9,14 +9,14 @@ fi
 HERE=$(pwd)
 cd $PULSAR_DIR
 # Edit here for adding other submodules
-BUILD_MODULES=${BUILD_MODULES:-"pulsar-common,pulsar-broker-common,pulsar-broker,pulsar-metadata,pulsar-functions/worker,pulsar-functions/instance"}
+BUILD_MODULES=${BUILD_MODULES:-""}
 BUILD_OFFLOADERS=${BUILD_OFFLOADERS:-false}
 
 PULSAR_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
 echo "Found Pulsar Version: $PULSAR_VERSION"
-
-${MVN_COMMAND} clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -Dlicense.skip -Djavadoc.skip -pl $BUILD_MODULES
-
+if [[ ! -z $BUILD_MODULES ]]; then
+    ${MVN_COMMAND} clean install -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -Dlicense.skip -Djavadoc.skip -pl $BUILD_MODULES
+fi
 TWEAK_ROOT_DIR=tests/docker-images/latest-version-image/tweak-root-dir
 rm -rf $TWEAK_ROOT_DIR
 

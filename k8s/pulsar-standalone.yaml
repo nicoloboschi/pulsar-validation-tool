@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: deploypulsar}
+spec:
+  selector:
+    matchLabels: {app: pulsar-cluster}
+  replicas: 1
+  template:
+    metadata:
+      labels: {app: pulsar-cluster}
+    spec:
+      containers:
+      - name: runpulsar
+        image: datastax/lunastreaming-all:2.10_0.4
+        command: [ "bin/pulsar", "standalone" ]
+        ports:
+        - {containerPort: 6650}
+        - {containerPort: 8080}

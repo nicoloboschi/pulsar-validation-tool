@@ -29,7 +29,7 @@ services:
 
 
   pulsar:
-    image: "datastax/lunastreaming-all:2.10_0.2"
+    image: "${PULSAR_IMAGE:-datastax/lunastreaming-all:2.10_0.2}"
     container_name: pulsar
     networks: [ "net1" ]
     environment:

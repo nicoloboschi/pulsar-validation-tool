@@ -1,0 +1,24 @@
+tenant: "public"
+namespace: default
+processingGuarantees: "EFFECTIVELY_ONCE"
+configs:
+  topic: "data-ks1.table1"
+  offsetStorageTopic: "snowflake-sink-offsets"
+  batchSize: "10"
+  lingerTimeMs: "10"
+  sanitizeTopicName: true
+  kafkaConnectorConfigProperties:
+     name: "snowflake-sink"
+     connector.class: "com.snowflake.kafka.connector.SnowflakeSinkConnector"
+     tasks.max: "1"
+     topics: "data-ks1.table1"
+     buffer.count.records: "10"
+     buffer.flush.time: "10"
+     buffer.size.bytes: "10"
+     snowflake.url.name: "dmb76871.us-east-1.snowflakecomputing.com:443"
+     snowflake.user.name: "pulsar_haxx_user_1"
+     snowflake.private.key: ""
+     snowflake.database.name: "pulsar_haxx_database"
+     snowflake.schema.name: "pulsar_haxx_schema"
+     key.converter: "org.apache.kafka.connect.storage.StringConverter"
+     value.converter: "com.snowflake.kafka.connector.records.SnowflakeJsonConverter"

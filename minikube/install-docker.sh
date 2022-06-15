@@ -2,7 +2,7 @@
 
 set -e
 sudo apt-get update
-sudo apt-get install \
+sudo apt-get install -y \
     ca-certificates \
     curl \
     gnupg \
@@ -15,6 +15,6 @@ echo \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io
+sudo apt-get install docker-ce docker-ce-cli containerd.io -y
 
 sudo chmod 666 /var/run/docker.sock

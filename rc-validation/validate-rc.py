@@ -212,8 +212,8 @@ while True:
                 os.environ.setdefault("PULSAR_IMAGE", container_id)
                 run_bash(["rm", "-rf", "pulsar-validation-tool"], cwd=working_dir)
                 run_bash(["git", "clone", "https://github.com/nicoloboschi/pulsar-validation-tool"], cwd=working_dir)
-                run_bash(["python3.9", "./local-docker-integration-tests-framework/runner.py", "run", "-f", "./local-docker-integration-tests-framework/tests/simple.yaml"], cwd=os.path.join(working_dir, "pulsar-validation-tool"))
-                run_bash(["python3.9", "./local-docker-integration-tests-framework/runner.py", "run", "-f", "./local-docker-integration-tests-framework/tests/elastic.yaml"], cwd=os.path.join(working_dir, "pulsar-validation-tool"))
+                run_bash(["python3", "./local-docker-integration-tests-framework/runner.py", "run", "-f", "./local-docker-integration-tests-framework/tests/simple.yaml"], cwd=os.path.join(working_dir, "pulsar-validation-tool"))
+                run_bash(["python3", "./local-docker-integration-tests-framework/runner.py", "run", "-f", "./local-docker-integration-tests-framework/tests/elastic.yaml"], cwd=os.path.join(working_dir, "pulsar-validation-tool"))
                 update_status(working_dir, "done")
             else:
                 update_status(working_dir, "done")

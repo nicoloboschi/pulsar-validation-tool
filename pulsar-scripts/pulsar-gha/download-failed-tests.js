@@ -34,7 +34,7 @@ async function addTestForRun(r, tests) {
                                 // console.log("annotation with no title")
                             }
                         }
-                    })).catch(e => console.error(e));
+                    }).catch(e => console.error(e)));
                 }
             }
             return Promise.all(annPromises)

@@ -1,6 +1,6 @@
-docker cp pulsar_transform.py friendly_turing:/pulsar/pulsar_transform.py
+docker cp pulsar_transform.py pulsar:/pulsar/pulsar_transform.py
 
-docker exec -it friendly_turing bin/pulsar-admin functions localrun \
+docker exec -it pulsar bin/pulsar-admin functions localrun \
   --tenant public \
   --namespace default \
   --name test_function_xx \

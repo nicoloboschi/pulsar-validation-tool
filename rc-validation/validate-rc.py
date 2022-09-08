@@ -107,7 +107,7 @@ parser.add_argument("-u", help="URL for artifacts")
 parser.add_argument("-v", help="Version of the artifacts")
 parser.add_argument("-p", help="Project")
 parser.add_argument("--skip-build", help="Skip build", default=False, action='store_true')
-parser.add_argument("--skip-docker", help="Skip docker", default=False, action='store_true')
+parser.add_argument("--skip-docker", help="Skip docker", default=True, action='store_true')
 parser.add_argument("--resume-from-dir", help="Resume from directory")
 parser.add_argument("--force-status", help="Force status")
 

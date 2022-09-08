@@ -4,7 +4,7 @@ networks:
 
 services:
   cassandra:
-    image: "4.0.1"
+    image: "cassandra-4-agent:latest"
     container_name: cassandra
     networks: [ "net1" ]
     environment:

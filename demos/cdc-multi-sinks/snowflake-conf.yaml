@@ -5,7 +5,7 @@ configs:
   topic: "data-ks1.table1"
   offsetStorageTopic: "snowflake-sink-offsets"
   batchSize: "10"
-  lingerTimeMs: "10"
+  lingerTimeMs: "30000"
   sanitizeTopicName: true
   kafkaConnectorConfigProperties:
      name: "snowflake-sink"

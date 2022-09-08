@@ -46,7 +46,11 @@ async function downloadRuns(status) {
         
         console.log("download page #", page)
         runs = data.data.workflow_runs
+        
         for (let r of runs) {
+            if (r.actor.login === "nicoloboschi" || r.actor.login === "lhotari") {
+                continue
+            }
             cancelIfInStatus(r, [status])
         }
         if (page === maxPage) {
@@ -56,4 +60,15 @@ async function downloadRuns(status) {
     } while (runs.length !== 0)
     return all
 }
-downloadRuns("queued")
+function schedule() {
+    setTimeout(function () {
+        downloadRuns("queued")
+        downloadRuns("in_progress")
+        schedule()
+    }, 60 * 1000);
+}
+schedule()
+
+
+
+

@@ -43,40 +43,8 @@ async function addTestForRun(r, tests) {
             .catch(e => console.error(e))
     });
 }
-async function downloadTests() {
-    let runs
-    let page = 0
-    const maxPage = 10
-    tests = {}
-    do {
-        const data = await octokit.rest.actions.listWorkflowRuns({
-            owner,
-            repo,
-            workflow_id: "pulsar-ci.yaml",
-            per_page: 100,
-            status: "failure",
-            page: page++
-        });
-        // -> check_suite_url -> check_suite_url + "/check-runs" -> {check_runs: [{output: {annotations_count: 0, annotations_url: <url>}}]} -> [{title}]
 
-        console.log("download page #", page)
-        runs = data.data.workflow_runs
-        const promises = []
-
-        for (let r of runs) {
-            promises.push(addTestForRun(r, tests).catch(e => console.error(e)))
-        }
-        await Promise.all(promises)
-        if (page === maxPage) {
-            break
-        }
-
-    } while (runs.length !== 0)
-    return tests
-}
-async function downloadAndWrite() {
-    const tests = await downloadTests()
-
+function syncToFile(tests) {
     let sortable = []
     for (let k in tests) {
         if (tests[k] > 0)
@@ -85,8 +53,42 @@ async function downloadAndWrite() {
     sortable.sort((a, b) => b.count - a.count)
     fs.writeFileSync("tests.json", JSON.stringify(sortable, null, 2))
 }
-downloadAndWrite()
+async function downloadMoreTests(tests, currentPage) {
+    syncToFile(tests)
+    const maxPage = 100
+    const data = await octokit.rest.actions.listWorkflowRuns({
+            owner,
+            repo,
+            workflow_id: "pulsar-ci.yaml",
+            per_page: 15,
+            status: "failure",
+            page: currentPage++
+        });
+        // -> check_suite_url -> check_suite_url + "/check-runs" -> {check_runs: [{output: {annotations_count: 0, annotations_url: <url>}}]} -> [{title}]
 
+    console.log("download page #", currentPage)
+    const runs = data.data.workflow_runs
+    const promises = []
 
-
+    for (let r of runs) {
+        promises.push(addTestForRun(r, tests).catch(e => console.error(e)))
+    }
+    await Promise.all(promises)
+    if (currentPage == maxPage) {
+        return Promise.resolve()
+    }
+    return setTimeout(() => downloadMoreTests(tests, currentPage), 2000)
+    
+}
+async function downloadTests() {
+    tests = {}
+    try {
+        await downloadMoreTests(tests, 0)
+        syncToFile(tests)
+    } catch (err) {
+        console.error(err)
+    }
+    return tests
+}
+downloadTests()
 

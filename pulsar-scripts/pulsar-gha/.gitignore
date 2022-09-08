@@ -1,2 +1,2 @@
-runs/
-./node_modules
+runs
+node_modules

@@ -1,7 +1,6 @@
 const { Octokit } = require("@octokit/rest");
-var fs = require('fs');
 
-const octokit = new Octokit({ auth: "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" });
+const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
 
 const owner = "apache"

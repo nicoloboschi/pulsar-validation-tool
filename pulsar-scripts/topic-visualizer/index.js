@@ -1,7 +1,6 @@
 const fs = require('fs');
 
-const stats = JSON.parse(fs.readFileSync('stats.json', 'utf8'));
-// const internal = JSON.parse(fs.readFileSync('fedex-stats.json', 'utf8'));
+const internal = JSON.parse(fs.readFileSync('stats-internal.json', 'utf8'));
 
 
 

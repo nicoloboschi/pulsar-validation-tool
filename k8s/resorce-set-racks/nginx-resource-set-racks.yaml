@@ -1,0 +1,291 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker-rs-shared1
+  labels:
+    app: broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broker
+      rack: zone1
+      rs: shared1
+  template:
+    metadata:
+      labels:
+        app: broker
+        rack: zone1
+        rs: shared1
+    spec:
+      affinity:
+          podAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                    - key: rack
+                      operator: NotIn
+                      values: 
+                      - zone2
+                      - default
+                  topologyKey: kubernetes.io/hostname
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: rack
+                  operator: In
+                  values: 
+                  - zone2
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: .5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker-rs-shared2
+  labels:
+    app: broker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: broker
+      rack: zone2
+      rs: shared2
+  template:
+    metadata:
+      labels:
+        app: broker
+        rack: zone2
+        rs: shared2
+    spec:
+      affinity:
+          podAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                    - key: rack
+                      operator: NotIn
+                      values: 
+                      - zone1
+                      - default
+                  topologyKey: kubernetes.io/hostname
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: rack
+                  operator: In
+                  values: 
+                  - zone1
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: .5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker-customer1
+  labels:
+    app: broker
+    rs: customer1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: broker
+      rs: customer1
+      rack: default
+  template:
+    metadata:
+      labels:
+        app: broker
+        rs: customer1
+        rack: default
+    spec:
+      affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values: 
+                  - broker
+                - key: rs
+                  operator: In
+                  values: 
+                  - customer1
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: .5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: broker-customer2
+  labels:
+    app: broker
+    rs: customer2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: broker
+      rs: customer2
+      rack: default
+  template:
+    metadata:
+      labels:
+        app: broker
+        rs: customer2
+        rack: default
+    spec:
+      affinity:
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values: 
+                  - broker
+                - key: rs
+                  operator: In
+                  values: 
+                  - customer2
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: .5
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy-rs-shared1
+  labels:
+    app: proxy
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: proxy
+      rack: zone1
+      rs: shared1
+  template:
+    metadata:
+      labels:
+        app: proxy
+        rack: zone1
+        rs: shared1
+    spec:
+      affinity:
+          podAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                    - key: rack
+                      operator: NotIn
+                      values: 
+                      - zone2
+                      - default
+                  topologyKey: kubernetes.io/hostname
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: rack
+                  operator: In
+                  values: 
+                  - zone2
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 5000m
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy-rs-shared2
+  labels:
+    app: proxy
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: proxy
+      rack: zone2
+      rs: shared2
+  template:
+    metadata:
+      labels:
+        app: proxy
+        rack: zone2
+        rs: shared2
+    spec:
+      affinity:
+          podAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                    - key: rack
+                      operator: NotIn
+                      values: 
+                      - zone1
+                      - default
+                  topologyKey: kubernetes.io/hostname
+          podAntiAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                - key: rack
+                  operator: In
+                  values: 
+                  - zone1
+              topologyKey: kubernetes.io/hostname
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            memory: 100Mi
+            cpu: 5000m
+---

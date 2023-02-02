@@ -1,0 +1,5 @@
+- Verify in K8s (Datastax Haxx suite)
+- Verify Pulsar shell basic commands
+- Verify rat and checksum
+- Verify license command
+- Verify jdk8 client with jdk17 standalone

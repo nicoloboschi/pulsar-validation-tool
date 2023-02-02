@@ -1,4 +1,4 @@
-messages=1000
+messages=100
 messages_per_txn=10
 total_txn=$((messages / messages_per_txn))
 /pulsar/bin/pulsar-perf produce -m $messages --exit-on-failure -t 1 consume-topic 

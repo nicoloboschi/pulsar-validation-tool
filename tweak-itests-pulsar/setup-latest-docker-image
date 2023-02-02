@@ -1,6 +1,6 @@
 #!/bin/bash
 set -ex
-MVN_COMMAND=${MVN_COMMAND:-"mvn"}
+MVN_COMMAND=${MVN_COMMAND:-"mvnd"}
 if [[ -z "$PULSAR_DIR" ]]; then
     echo "PULSAR_DIR not set"
     exit 1

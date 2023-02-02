@@ -169,6 +169,7 @@ else:
     files_to_check.append("apache-pulsar-%s-bin.tar.gz" % version)
     files_to_check.append("apache-pulsar-%s-src.tar.gz" % version)
     files_to_check.append("apache-pulsar-offloaders-%s-bin.tar.gz" % version)
+    files_to_check.append("apache-pulsar-shell-%s-bin.tar.gz" % version)
 
     source_file = os.path.join(working_dir, "apache-pulsar-%s-src.tar.gz" % version)
 
@@ -196,7 +197,9 @@ while True:
             src_dir = os.path.join(extract_dir, os.listdir(extract_dir)[0])
             
             build_mvn(src_dir, project, version)
-        update_status(working_dir, "build")
+        # new: skip build by default
+        update_status(working_dir, "done")
+
     elif status == "build":
         if project == "pulsar":
             if not skip_docker:

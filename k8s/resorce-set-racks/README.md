@@ -45,5 +45,6 @@ Combininig podAffinity and podAntiAffinity rules we obtain this scenario:
 The advantage of this solution is that each deployment can be scaled-up and scaled-down independently.
 
 
+![image](https://user-images.githubusercontent.com/23314389/216536936-c4b863c6-6a89-4b50-80ee-0c98e83daae4.png)
 
 

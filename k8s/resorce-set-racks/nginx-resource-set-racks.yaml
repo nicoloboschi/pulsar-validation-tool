@@ -29,7 +29,7 @@ spec:
                       values: 
                       - zone2
                       - default
-                  topologyKey: kubernetes.io/hostname
+                  topologyKey: topology.kubernetes.io/zone
           podAntiAffinity:
             requiredDuringSchedulingIgnoredDuringExecution:
             - labelSelector:
@@ -38,7 +38,7 @@ spec:
                   operator: In
                   values: 
                   - zone2
-              topologyKey: kubernetes.io/hostname
+              topologyKey: topology.kubernetes.io/zone
       containers:
       - name: nginx
         image: nginx:1.14.2

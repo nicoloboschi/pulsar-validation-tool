@@ -21,6 +21,8 @@ const asTopic = getFromEnv("AS_TOPIC");
     serviceUrl: pulsarUri,
     authentication: auth,
     operationTimeoutSeconds: 30,
+    tlsCertificateFilePath: "",
+    tlsValidateHostname: true
   });
   Pulsar.Client.setLogHandler((level, file, line, message) => {
     console.log('[%s][%s:%d] %s', Pulsar.LogLevel.toString(level), file, line, message);

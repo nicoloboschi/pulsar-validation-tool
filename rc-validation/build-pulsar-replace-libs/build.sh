@@ -35,7 +35,7 @@ if [[ -z "$ref_to" ]]; then
 fi
 
 
-HERE=$(pwd)
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 cd $PULSAR_DIR
 
 BUILD_MODULES=$(git diff --name-only ${ref_from}..${ref_to} | grep -v "pom\.xml" | grep -v "conf/" | grep -v "pulsar-io/" | grep -v "tiered-storage/" | grep -v "LICENSE" | awk -F'/' '{print $1}' | sort --unique | tr '[:space:]' ',')

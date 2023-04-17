@@ -38,7 +38,7 @@ fi
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 cd $PULSAR_DIR
 
-BUILD_MODULES=$(git diff --name-only ${ref_from}..${ref_to} | grep -v "pom\.xml" | grep -v "conf/" | grep -v "pulsar-io/" | grep -v "tiered-storage/" | grep -v "LICENSE" | awk -F'/' '{print $1}' | sort --unique | tr '[:space:]' ',')
+BUILD_MODULES=$(git diff --name-only ${ref_from}..${ref_to} | grep -v "pom\.xml" | grep -v "conf/" | grep -v "/src/test" | grep -v "pulsar-io/" | grep -v "tiered-storage/" | grep -v "LICENSE" | sed 's/\/src.*//'  | sort --unique | tr '[:space:]' ',')
 echo "found modules: $BUILD_MODULES"
 
 
@@ -47,7 +47,6 @@ DOCKER_PULSAR_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -Dforc
 
 
 git checkout $ref_to
-mvn_or_mvnd clean package -nsu -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -Dlicense.skip -Djavadoc.skip -DskipSourceReleaseAssembly -q -pl $BUILD_MODULES -am
 
 rm -rf /tmp/build-pulsar-replace-libs
 mkdir /tmp/build-pulsar-replace-libs
@@ -80,6 +79,16 @@ cp_module_recursive() {
         fi
     done
 }
+
+projects=""
+for module in "${MODULES_ARR[@]}"; do
+    artifact_id=$(mvn help:evaluate -Dexpression=project.artifactId -q -DforceStdout -f $module)
+    projects+=":$artifact_id,$projects"
+done
+echo "Building modules: $projects"
+mvn_or_mvnd clean install -nsu -DskipTests -Dcheckstyle.skip -Dspotbugs.skip -Dlicense.skip -Djavadoc.skip -DskipSourceReleaseAssembly -q -pl $projects -am
+
+
 
 for module in "${MODULES_ARR[@]}"; do
     cp_module_recursive $module
